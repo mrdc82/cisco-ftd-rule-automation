@@ -45,7 +45,7 @@ Which in my opinion, is a better and safer method of implementation, as it makes
 This project serves to save time and effort spent manually implementing rules.
 In a completed project working in production for ASA rule implementations, the evidence shows that where it used to take roughly 45 minutes, and 3 engineers to implement, has now been brought down to less than 10 minutes, and requires only 1 engineer to run with.
 <h2>Key things to note</h2>
-- In the PUT_acp_new_rules script, you must populate a dictionary containing your ftd policy id's, tied into the policy name.
+- In the PUT_acp_new_rules script, you must populate a dictionary containing your ftd policy id's, tied into the policy name. Also dont forget to populate your domain id in the url, add fmc_ip to variable, and update generate_token script with your information, ie, api-key, domainid,fmc ip.
 - The port protocols also refer to a dictionary located in the payload_generator script. This dictionary contains the protocol number for the designated port type.<br>
 - All duplicate ports are removed before the API put request, as for some reason this gets duplicated in the rule implementation. Fortunately it is not the case for ip addresses.
 
