@@ -1,5 +1,5 @@
 '''
-Author: Dino Charalambous F5238692
+Author: Dino Charalambous
 Description: Partially update FTD rules, where Inspection is disabled on the rule.
 PortLiteral Mappings
 tcp: 6
