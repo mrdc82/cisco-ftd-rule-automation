@@ -1,73 +1,115 @@
 # Cisco FTD Rule Automation
 
+## GitHub Repository
+- **[Cisco FTD Rule Automation](https://github.com/mrdc82/cisco_ftd_rule_automation)**
+- **Last Commit:** [View on GitHub](https://github.com/mrdc82/cisco_ftd_rule_automation/commits/main)
+- **Issues:** [Report an Issue](https://github.com/mrdc82/cisco_ftd_rule_automation/issues)
+
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Overview
-This project was developed to streamline and automate the time-consuming task of manually implementing FTD firewall rules. Our department processes between 30 to 50 firewall rule changes daily, making automation essential for efficiency. By leveraging Python automation and the FMC API, this project significantly reduces manual input, improving accuracy and speed.
+Managing firewall rules on Cisco Firepower Threat Defense (FTD) devices can be a time-consuming and error-prone task, especially in large-scale environments. This project provides a Python-based solution to automate the process of creating, updating, and deleting firewall rules using the Firepower Management Center (FMC) API.
 
-Our team uses **ServiceNow (SNOW)** as a ticketing system, where:
-1. A business unit logs a ticket with source, destination, and port information.
-2. ServiceNow compiles the request into a table.
-3. The Data Centre Automation team determines the relevant firewall.
-4. The security team receives a file (e.g., `CHG0001.txt`) for rule implementation on FMC.
+This tool is designed to:
+- Streamline firewall rule management.
+- Reduce manual configuration errors.
+- Enable bulk operations for large rule sets.
+- Provide a flexible and scriptable interface for network administrators.
 
-This project provides a flexible automation framework adaptable to different ticketing systems and rule request processes. Feel free to collaborate on custom integrations!
+## Features
+- **Rule Creation:** Automates the creation of access control rules.
+- **Rule Modification:** Updates existing rules with new parameters (e.g., source/destination IPs, ports, actions).
+- **Rule Deletion:** Removes rules from the configuration.
+- **Bulk Operations:** Allows actions on multiple rules simultaneously.
+- **Logging and Reporting:** Generates logs and reports for audit purposes.
+- **API Integration:** Utilizes the Cisco FMC REST API for seamless integration.
+
+## Prerequisites
+Ensure you have the following before using this tool:
+- **Python 3.7 or higher** (Required for script execution)
+- **Cisco FMC API Access** (Ensure API access is enabled)
+- **API Credentials** (Username, password, and API token for authentication)
+- **Required Python Libraries:**
+  - `requests`
+  - `json`
+  - `logging`
+  - `argparse`
+  
+To install the required libraries, run:
+```bash
+pip install requests json logging argparse
+```
+
+## Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/mrdc82/cisco_ftd_rule_automation.git
+   cd cisco_ftd_rule_automation
+   ```
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Configure FMC API credentials:**
+   Update the `config.json` file with your FMC details:
+   ```json
+   {
+     "fmc_host": "your-fmc-hostname-or-ip",
+     "username": "your-username",
+     "password": "your-password"
+   }
+   ```
+
+## Usage
+This project consists of three main stages:
+
+### **Stage 1: Rule File Preparation**
+Run `build_policyid_files.py` to format and organize rule files based on the FTD Policy Name. The formatted files will be used for policy deployment.
+
+### **Stage 2: Payload Generation**
+Run `payload_generator.py` to extract rule data (source, destination, ports) and create a JSON payload for API consumption. This script ensures duplicate ports are removed before sending requests to FMC.
+
+### **Stage 3: Rule Deployment**
+Run `PUT_acp_new_rules.py` to implement the rules on the FMC. This script:
+- Creates a blank rule.
+- Updates the blank rule with the payload data.
+- Deploys the updated rule to the correct policy.
+
+## Examples
+**Executing the script:**
+```bash
+python build_policyid_files.py
+python payload_generator.py
+python PUT_acp_new_rules.py
+```
+
+## Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a new branch (`feature-branch` or `bugfix-branch`).
+3. Commit your changes.
+4. Submit a pull request with a detailed description of your changes.
+
+Please ensure your code adheres to the project's coding standards and includes appropriate documentation.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+- **Cisco Systems** for providing the Firepower Management Center API.
+- **The Python community** for invaluable resources and libraries.
+
+For questions or support, please [open an issue](https://github.com/mrdc82/cisco_ftd_rule_automation/issues) on GitHub.
 
 ---
-
-## Process Workflow
-This automation follows a three-stage workflow:
-
-### **Stage 1: Generating Policy-Specific Rule Files** (`build_policyid_files.py`)
-- The engineer selects the file containing FTD rules.
-- The script processes the file and generates individual rule files based on FTD Policy Names.
-- The output filenames follow the format: `FTDname_CHGxxx.txt` (used for both policy name and rule name in FMC).
-
-### **Stage 2: Payload Generation** (`payload_generator.py`)
-- The engineer selects a generated policy file.
-- The script extracts source, destination, and port information.
-- Duplicate ports are removed to prevent API duplication errors.
-- The payload is created but lacks a **rule ID**, which is assigned in the next step.
-
-### **Stage 3: Rule Implementation on FMC** (`PUT_acp_new_rules.py`)
-- The script first creates a **blank rule** (containing only the name and log settings).
-- Once created, the rule ID is retrieved and assigned to the payload.
-- The script then **updates the rule** with the extracted values.
-- Policies are referenced using **policy ID mappings** (since FMC APIs require IDs instead of names).
-
-> ⚠ **Important:** If a rule with the same name already exists, an **invalid key error** occurs. Exception handling will be included in future updates.
-
----
-
-## Key Features
-- **Automates Firewall Rule Implementation**: Eliminates the need for manual rule creation.
-- **ServiceNow Integration**: Works with SNOW or other ticketing systems.
-- **Efficient Rule Processing**: Reduces implementation time from **45 minutes (3 engineers)** to **less than 10 minutes (1 engineer)**.
-- **Port Deduplication**: Prevents duplicate port object creation in FMC.
-- **Safe & Reversible Changes**: Each rule is created as a new entity instead of modifying existing rules.
-
----
-
-## Setup & Configuration
-Before running the scripts, ensure the following variables are properly configured:
-
-1. **FTD Policy ID Dictionary**: Populate the dictionary in `PUT_acp_new_rules.py` with policy names and corresponding IDs.
-2. **FMC API Credentials**:
-   - Add your **FMC IP**, **API key**, and **domain ID** in `generate_token.py`.
-3. **Port Protocol Mapping**:
-   - The `payload_generator.py` script contains a dictionary for protocol-to-port mappings.
-4. **ServiceNow File Format**:
-   - Ensure incoming request files follow the standard format (`CHG00001.txt`).
-
----
-
-## Future Enhancements
-🔹 Automate iteration through multiple rule files.
-🔹 Enhance exception handling for duplicate rule names.
-🔹 Implement rule merging instead of always creating new rules.
-
----
-
-## Conclusion
-This project aims to **streamline FTD rule implementations**, saving valuable time and effort. By replacing manual rule entry with an automated workflow, teams can focus on higher-priority security tasks while reducing errors and implementation delays.
-
-If you have any questions or ideas for improvement, feel free to collaborate! 🚀
+🚀 **Automate your firewall rule management with ease!**
 
