@@ -1,6 +1,3 @@
-Certainly! Below is a professionally structured `README.md` for your GitHub repository, **Cisco FTD Rule Automation**. This README provides an overview of the project, its purpose, features, installation instructions, usage examples, and contribution guidelines.
-
----
 
 # Cisco FTD Rule Automation
 
