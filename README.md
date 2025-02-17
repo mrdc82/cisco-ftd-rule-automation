@@ -1,8 +1,6 @@
 # Cisco FTD Rule Automation
 
 ## GitHub Repository
-- **[Cisco FTD Rule Automation](https://github.com/mrdc82/cisco_ftd_rule_automation)**
-- **Last Commit:** [View on GitHub](https://github.com/mrdc82/cisco_ftd_rule_automation/commits/main)
 - **Issues:** [Report an Issue](https://github.com/mrdc82/cisco_ftd_rule_automation/issues)
 
 ## Table of Contents
