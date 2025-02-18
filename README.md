@@ -58,14 +58,10 @@ pip install requests json logging argparse
    pip install -r requirements.txt
    ```
 3. **Configure FMC API credentials:**
-   Update the `config.json` file with your FMC details:
-   ```json
-   {
-     "fmc_host": "your-fmc-hostname-or-ip",
-     "username": "your-username",
-     "password": "your-password"
-   }
-   ```
+   Update the generate_token.py file with your FMC token details:
+
+4. **Configure URL details:**
+   Update the generate_token.py and PUT_acp_new_rules.py file with your FMC ip address:
 
 ## Usage
 This project consists of three main stages:
